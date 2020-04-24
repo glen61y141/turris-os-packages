@@ -30,13 +30,14 @@ if part uuid ${devtype} ${devnum}:${distro_bootpart} partuuid; then
 		if test "$filesize" = "0"; then
 			echo "Failed to load ${subvol}/boot/Image"
 			echo "Now trying ${subvol}/boot/Image.lzma"
-			load ${devtype} ${devnum}:${distro_bootpart} 0x10000000 ${subvol}/boot/Image.lzma
+			tmp_addr_r=0x10000000
+			load ${devtype} ${devnum}:${distro_bootpart} ${tmp_addr_r} ${subvol}/boot/Image.lzma
 			if test "$filesize" != "0"; then
-				if lzmadec 0x10000000 ${kernel_addr_r}; then
+				if lzmadec ${tmp_addr_r} ${kernel_addr_r}; then
 					echo "Successfully decompressed Image.lzma"
 				else
 					echo "Failed decompressing Image.lzma"
-					setenv filesize 0
+					filesize=0
 				fi
 			else
 				echo "Failed to load ${subvol}/boot/Image.lzma"
