@@ -1,0 +1,21 @@
+#!/bin/sh
+# This script enables packet logging in firewall zone wan
+. /lib/functions.sh
+config_load firewall
+
+zone_handle() {
+	local conf="$1"
+
+	local name
+	config_get name "$conf" name
+	[ "$name" != "wan" ] && return
+
+	local log
+	config_get log "$conf" _sentinel_managed__log
+	if [ -z "$log" ]; then
+		uci set "firewall.$conf._sentinel_managed__log=1"
+	fi
+}
+config_foreach zone_handle zone
+
+nikola-firewall.sh -f
