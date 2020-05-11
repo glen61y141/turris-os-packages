@@ -1,0 +1,9 @@
+menu "Configuration"
+
+config KNOT_RESOLVER_DYNAMIC_DOMAINS
+	bool "Enable dynamic domains dependency"
+	help
+		Adds depency for dynamic domains
+	default y
+
+endmenu
