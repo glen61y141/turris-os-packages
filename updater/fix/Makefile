@@ -44,6 +44,10 @@ $$(eval $$(call BuildPackage,fix-$(1)))
 endef
 
 
+define Package/network-restart/description
+  This fix just simply restarts network when installed.
+endef
+
 define Package/fix-sentinel-remove-invalid-firewall-rules/description
   This is used to remove data collection firewall rules before we update those
   packages. Initial requirement was because originaly those rules were not fully
@@ -79,6 +83,7 @@ define Package/fix-dns-forward-quad9-split/description
   variant. This replaces quad9 with quad9_unfiltered setting as compatible change.
 endef
 
+$(eval $(call FIX,network-restart,+netifd))
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
