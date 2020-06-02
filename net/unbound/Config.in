@@ -3,7 +3,7 @@ menu "Configuration"
 config UNBOUND_DYNAMIC_DOMAINS
 	bool "Enable dynamic domains dependency"
 	help
-		Adds depency for dynamic domains
+	Add dependency for dynamic domains
 	default y
 
 endmenu
