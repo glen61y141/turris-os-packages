@@ -1,0 +1,39 @@
+From e888251b430afc577eacd9b4665c200e097679a2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C3=89frit?= <Efrit@posteo.net>
+Date: Mon, 16 Mar 2020 23:23:55 +0000
+Subject: [PATCH 18/36] Translated using Weblate (French)
+
+Currently translated at 93.0% (349 of 375 strings)
+
+Translation: Turris/reForis
+Translate-URL: https://hosted.weblate.org/projects/turris/reforis/fr/
+---
+ reforis/translations/fr/LC_MESSAGES/messages.po | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/reforis/translations/fr/LC_MESSAGES/messages.po b/reforis/translations/fr/LC_MESSAGES/messages.po
+index ace774e..3c11bbc 100644
+--- a/reforis/translations/fr/LC_MESSAGES/messages.po
++++ b/reforis/translations/fr/LC_MESSAGES/messages.po
+@@ -8,8 +8,8 @@ msgstr ""
+ "Project-Id-Version: PROJECT VERSION\n"
+ "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+ "POT-Creation-Date: 2020-02-20 17:21+0100\n"
+-"PO-Revision-Date: 2020-03-16 23:23+0000\n"
+-"Last-Translator: XoD DarK <xod@xoddark.com>\n"
++"PO-Revision-Date: 2020-03-17 11:10+0000\n"
++"Last-Translator: Éfrit <Efrit@posteo.net>\n"
+ "Language-Team: French <https://hosted.weblate.org/projects/turris/reforis/fr/"
+ ">\n"
+ "Language: fr\n"
+@@ -615,7 +615,6 @@ msgid "Guide Workflow"
+ msgstr "Guide du flux de travail"
+ 
+ #: js/src/guide/WorkflowSelect.js:56
+-#, fuzzy
+ msgid ""
+ "Here you can set the guide walkthrough which will guide you through the "
+ "basic configuration of your device."
+-- 
+2.26.2
+

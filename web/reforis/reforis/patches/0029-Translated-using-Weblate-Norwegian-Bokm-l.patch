@@ -1,0 +1,51 @@
+From 57dc54b53a71c58ac804ff59ebb3b531b71d38bc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Allan=20Nordh=C3=B8y?= <epost@anotheragency.no>
+Date: Mon, 11 May 2020 13:45:10 +0000
+Subject: [PATCH 29/36] =?UTF-8?q?Translated=20using=20Weblate=20(Norwegian?=
+ =?UTF-8?q?=20Bokm=C3=A5l)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Currently translated at 44.0% (165 of 375 strings)
+
+Translation: Turris/reForis
+Translate-URL: https://hosted.weblate.org/projects/turris/reforis/nb_NO/
+---
+ reforis/translations/nb/LC_MESSAGES/messages.po | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/reforis/translations/nb/LC_MESSAGES/messages.po b/reforis/translations/nb/LC_MESSAGES/messages.po
+index 731b34d..cb538be 100644
+--- a/reforis/translations/nb/LC_MESSAGES/messages.po
++++ b/reforis/translations/nb/LC_MESSAGES/messages.po
+@@ -8,7 +8,7 @@ msgstr ""
+ "Project-Id-Version: PROJECT VERSION\n"
+ "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+ "POT-Creation-Date: 2020-02-20 17:21+0100\n"
+-"PO-Revision-Date: 2020-04-15 20:11+0000\n"
++"PO-Revision-Date: 2020-05-13 08:41+0000\n"
+ "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+ "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/turris/"
+ "reforis/nb_NO/>\n"
+@@ -17,7 +17,7 @@ msgstr ""
+ "Content-Type: text/plain; charset=utf-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ "Plural-Forms: nplurals=2; plural=n != 1;\n"
+-"X-Generator: Weblate 4.0-dev\n"
++"X-Generator: Weblate 4.1-dev\n"
+ "Generated-By: Babel 2.7.0\n"
+ 
+ #: js/src/about/About.js:22 js/src/main/pages.js:133
+@@ -1673,7 +1673,7 @@ msgid ""
+ "IPv6 address and prefix length for WAN interface e.g. "
+ "2001:db8:be13:37da::1/64"
+ msgstr ""
+-"IPv6-adresse og prefikslengde for WAN-grensesnitt. F.eks "
++"IPv6-adresse og prefikslengde for WAN-grensesnitt. F.eks. "
+ "2001:db8:be13:37da::1/64"
+ 
+ #: js/src/wan/WAN6Form.js:28
+-- 
+2.26.2
+

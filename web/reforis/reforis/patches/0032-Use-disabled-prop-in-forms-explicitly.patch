@@ -1,0 +1,1398 @@
+From 16a9a2438c72b391ed906c74f522b61774a194b2 Mon Sep 17 00:00:00 2001
+From: Bogdan Bodnar <bogdan.bodnar@nic.cz>
+Date: Thu, 7 May 2020 15:14:56 +0200
+Subject: [PATCH 32/36] Use disabled prop in forms explicitly.
+
+---
+ js/src/common/network/DHCPClientForm.js       |  5 +-
+ js/src/common/network/DHCPServerForm.js       | 10 ++--
+ js/src/common/network/StaticIPForm.js         | 13 ++---
+ js/src/dns/DNSForm.js                         | 13 ++---
+ js/src/guestNetwork/GuestNetworkForm.js       | 25 ++++-----
+ js/src/interfaces/InterfacesForm.js           | 11 ++--
+ js/src/lan/LANForm.js                         |  9 ++--
+ js/src/lan/LANManagedForm.js                  | 12 ++---
+ js/src/lan/LANUnmanagedForm.js                |  9 ++--
+ js/src/notificationsSettings/CommonForm.js    |  9 ++--
+ .../NotificationsEmailSettingsForm.js         | 13 ++---
+ .../notificationsSettings/SMTPCustomForm.js   | 15 +++---
+ .../notificationsSettings/SMTPTurrisForm.js   |  5 +-
+ .../forms/RestartAfterUpdateForm.js           |  7 +--
+ .../forms/UpdateApprovalForm.js               |  7 +--
+ .../updateSettings/forms/UpdatesForm.js       |  9 ++--
+ js/src/password/CurrentForisPasswordForm.js   |  5 +-
+ js/src/password/ForisPasswordForm.js          |  7 +--
+ js/src/password/RootPasswordForm.js           |  5 +-
+ js/src/regionAndTime/TimeForm.js              |  7 ++-
+ js/src/wan/MACForm.js                         |  7 +--
+ js/src/wan/WAN6Form.js                        | 53 ++++++++++---------
+ js/src/wan/WANForm.js                         | 17 +++---
+ 23 files changed, 146 insertions(+), 127 deletions(-)
+
+diff --git a/js/src/common/network/DHCPClientForm.js b/js/src/common/network/DHCPClientForm.js
+index 8663477..3eb2300 100644
+--- a/js/src/common/network/DHCPClientForm.js
++++ b/js/src/common/network/DHCPClientForm.js
+@@ -23,10 +23,11 @@ DHCPClientForm.propTypes = {
+     }),
+     setFormValue: PropTypes.func.isRequired,
+     updateRule: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ export default function DHCPClientForm({
+-    formData, formErrors, setFormValue, updateRule, ...props
++    formData, formErrors, setFormValue, updateRule, disabled,
+ }) {
+     return (
+         <TextInput
+@@ -39,7 +40,7 @@ export default function DHCPClientForm({
+                 (value) => updateRule({ hostname: { $set: value } }),
+             )}
+ 
+-            {...props}
++            disabled={disabled}
+         />
+     );
+ }
+diff --git a/js/src/common/network/DHCPServerForm.js b/js/src/common/network/DHCPServerForm.js
+index 6b16e7c..9d615b8 100644
+--- a/js/src/common/network/DHCPServerForm.js
++++ b/js/src/common/network/DHCPServerForm.js
+@@ -25,7 +25,7 @@ DHCPServerForm.propTypes = {
+     }),
+     updateRule: PropTypes.func.isRequired,
+     setFormValue: PropTypes.func.isRequired,
+-    routerIP: PropTypes.string.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ DHCPServerForm.defaultProps = {
+@@ -33,7 +33,7 @@ DHCPServerForm.defaultProps = {
+ };
+ 
+ export default function DHCPServerForm({
+-    formData, formErrors, updateRule, setFormValue, routerIP, ...props
++    formData, formErrors, updateRule, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -47,7 +47,7 @@ export default function DHCPServerForm({
+                     (value) => updateRule({ start: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <NumberInput
+                 label={_("DHCP max leases")}
+@@ -61,7 +61,7 @@ export default function DHCPServerForm({
+                     (value) => updateRule({ limit: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <NumberInput
+                 label={_("Lease time (hours)")}
+@@ -74,7 +74,7 @@ export default function DHCPServerForm({
+                     (value) => updateRule({ lease_time: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/common/network/StaticIPForm.js b/js/src/common/network/StaticIPForm.js
+index 8cc04a4..b4ef570 100644
+--- a/js/src/common/network/StaticIPForm.js
++++ b/js/src/common/network/StaticIPForm.js
+@@ -27,6 +27,7 @@ StaticIPForm.propTypes = {
+     formErrors: PropTypes.shape(FIELDS_PROP_TYPES),
+     setFormValue: PropTypes.func.isRequired,
+     updateRule: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ StaticIPForm.defaultProps = {
+@@ -35,7 +36,7 @@ StaticIPForm.defaultProps = {
+ };
+ 
+ export default function StaticIPForm({
+-    formData, formErrors, updateRule, setFormValue, ...props
++    formData, formErrors, updateRule, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -49,7 +50,7 @@ export default function StaticIPForm({
+                     (value) => updateRule({ ip: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Network mask")}
+@@ -61,7 +62,7 @@ export default function StaticIPForm({
+                     (value) => updateRule({ netmask: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Gateway")}
+@@ -73,7 +74,7 @@ export default function StaticIPForm({
+                     (value) => updateRule({ gateway: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("DNS server 1")}
+@@ -85,7 +86,7 @@ export default function StaticIPForm({
+                     (value) => updateRule({ dns1: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("DNS server 2")}
+@@ -97,7 +98,7 @@ export default function StaticIPForm({
+                     (value) => updateRule({ dns2: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/dns/DNSForm.js b/js/src/dns/DNSForm.js
+index 2f5291e..dcd79e0 100644
+--- a/js/src/dns/DNSForm.js
++++ b/js/src/dns/DNSForm.js
+@@ -37,10 +37,11 @@ DNSForm.propTypes = {
+     }),
+     setFormValue: PropTypes.func,
+     ws: PropTypes.instanceOf(WebSockets),
++    disabled: PropTypes.bool,
+ };
+ 
+ export default function DNSForm({
+-    formData, formErrors, setFormValue, ws, ...props
++    formData, formErrors, setFormValue, ws, disabled,
+ }) {
+     const [DNSSECModalShown, setDNSSECModalShown] = useState(false);
+ 
+@@ -73,14 +74,14 @@ export default function DNSForm({
+ 
+                 onChange={setFormValue((value) => ({ forwarding_enabled: { $set: value } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.forwarding_enabled && (
+                 <Forwarders
+                     value={formData.forwarder}
+                     setFormValue={setFormValue}
+                     ws={ws}
+-                    {...props}
++                    disabled={disabled}
+                 />
+             )}
+             <CheckBox
+@@ -89,7 +90,7 @@ export default function DNSForm({
+ 
+                 onChange={changeDNSSECHandler}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <CheckBox
+                 label={_("Enable DHCP clients in DNS")}
+@@ -98,7 +99,7 @@ export default function DNSForm({
+ 
+                 onChange={setFormValue((value) => ({ dns_from_dhcp_enabled: { $set: value } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.dns_from_dhcp_enabled
+                     && (
+@@ -112,7 +113,7 @@ export default function DNSForm({
+                                 (value) => ({ dns_from_dhcp_domain: { $set: value } }),
+                             )}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                     )}
+         </>
+diff --git a/js/src/guestNetwork/GuestNetworkForm.js b/js/src/guestNetwork/GuestNetworkForm.js
+index f4f6d59..0b0f6bf 100644
+--- a/js/src/guestNetwork/GuestNetworkForm.js
++++ b/js/src/guestNetwork/GuestNetworkForm.js
+@@ -40,6 +40,7 @@ GuestNetworkForm.propTypes = {
+         qos: PropTypes.object,
+     }),
+     setFormValue: PropTypes.func,
++    disabled: PropTypes.bool,
+ };
+ 
+ GuestNetworkForm.defaultProps = {
+@@ -50,7 +51,7 @@ GuestNetworkForm.defaultProps = {
+ };
+ 
+ export default function GuestNetworkForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -62,7 +63,7 @@ export default function GuestNetworkForm({
+                     (value) => ({ enabled: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.enabled
+                 ? (
+@@ -78,7 +79,7 @@ export default function GuestNetworkForm({
+                                 (value) => ({ ip: { $set: value } }),
+                             )}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                         <TextInput
+                             label={_("Network mask")}
+@@ -90,7 +91,7 @@ export default function GuestNetworkForm({
+                                 (value) => ({ netmask: { $set: value } }),
+                             )}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                         <CheckBox
+                             label={_("Enable DHCP")}
+@@ -101,7 +102,7 @@ export default function GuestNetworkForm({
+                                 (value) => ({ dhcp: { enabled: { $set: value } } }),
+                             )}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                         {formData.dhcp.enabled
+                             ? (
+@@ -110,9 +111,8 @@ export default function GuestNetworkForm({
+                                     formErrors={formErrors.dhcp ? formErrors.dhcp : {}}
+                                     updateRule={(value) => ({ dhcp: value })}
+                                     setFormValue={setFormValue}
+-                                    routerIP={formData.ip}
+ 
+-                                    {...props}
++                                    disabled={disabled}
+                                 />
+                             )
+                             : null}
+@@ -125,7 +125,7 @@ export default function GuestNetworkForm({
+                                 (value) => ({ qos: { enabled: { $set: value } } }),
+                             )}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                         {formData.qos.enabled
+                             ? (
+@@ -134,7 +134,7 @@ export default function GuestNetworkForm({
+                                     formErrors={formErrors.qos}
+                                     setFormValue={setFormValue}
+ 
+-                                    {...props}
++                                    disabled={disabled}
+                                 />
+                             )
+                             : null}
+@@ -156,6 +156,7 @@ QoSForm.propTypes = {
+         download: PropTypes.string,
+         upload: PropTypes.string,
+     }),
++    disabled: PropTypes.bool,
+ };
+ 
+ QoSForm.defaultProps = {
+@@ -163,7 +164,7 @@ QoSForm.defaultProps = {
+ };
+ 
+ function QoSForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -181,7 +182,7 @@ function QoSForm({
+                     (value) => ({ qos: { download: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <NumberInput
+                 label={_("Upload")}
+@@ -196,7 +197,7 @@ function QoSForm({
+                     (value) => ({ qos: { upload: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/interfaces/InterfacesForm.js b/js/src/interfaces/InterfacesForm.js
+index 15f17c9..dd171ea 100644
+--- a/js/src/interfaces/InterfacesForm.js
++++ b/js/src/interfaces/InterfacesForm.js
+@@ -34,6 +34,7 @@ InterfacesForm.propTypes = {
+         }),
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ InterfacesForm.defaultProps = {
+@@ -41,7 +42,7 @@ InterfacesForm.defaultProps = {
+ };
+ 
+ export default function InterfacesForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     const [selectedID, setSelectedID] = useState(null);
+     const [setAlert, dismissAlert] = useAlert();
+@@ -92,7 +93,7 @@ export default function InterfacesForm({
+                 interfaces={formData.networks.wan}
+                 selected={selectedID}
+                 setSelected={setSelectedID}
+-                {...props}
++                disabled={disabled}
+             />
+             <h3>{NETWORKS_CHOICES.lan}</h3>
+             {formErrors && formErrors.networks && formErrors.networks.lan
+@@ -102,7 +103,7 @@ export default function InterfacesForm({
+                         interfaces={formData.networks.lan}
+                         selected={selectedID}
+                         setSelected={setSelectedID}
+-                        {...props}
++                        disabled={disabled}
+                     />
+                 )}
+             <h3>{NETWORKS_CHOICES.guest}</h3>
+@@ -110,14 +111,14 @@ export default function InterfacesForm({
+                 interfaces={formData.networks.guest}
+                 selected={selectedID}
+                 setSelected={setSelectedID}
+-                {...props}
++                disabled={disabled}
+             />
+             <h3>{NETWORKS_CHOICES.none}</h3>
+             <Network
+                 interfaces={formData.networks.none}
+                 selected={selectedID}
+                 setSelected={setSelectedID}
+-                {...props}
++                disabled={disabled}
+             />
+             {selectedID && (
+                 <SelectedInterface
+diff --git a/js/src/lan/LANForm.js b/js/src/lan/LANForm.js
+index 3462baa..7a521cb 100644
+--- a/js/src/lan/LANForm.js
++++ b/js/src/lan/LANForm.js
+@@ -41,10 +41,11 @@ LANForm.propTypes = {
+         mode_unmanaged: PropTypes.object,
+     }),
+     setFormValue: PropTypes.func,
++    disabled: PropTypes.bool,
+ };
+ 
+ export default function LANForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     const errors = formErrors || {};
+     const lanMode = formData.mode;
+@@ -56,7 +57,7 @@ export default function LANForm({
+                 formData={formData.mode_managed}
+                 formErrors={errors.mode_managed}
+                 setFormValue={setFormValue}
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (lanMode === LAN_MODES.unmanaged) {
+@@ -65,7 +66,7 @@ export default function LANForm({
+                 formData={formData.mode_unmanaged}
+                 formErrors={errors.mode_unmanaged}
+                 setFormValue={setFormValue}
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     }
+@@ -81,7 +82,7 @@ export default function LANForm({
+ 
+                 onChange={setFormValue((value) => ({ mode: { $set: value } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {lanForm}
+         </>
+diff --git a/js/src/lan/LANManagedForm.js b/js/src/lan/LANManagedForm.js
+index e0793c9..abb6835 100644
+--- a/js/src/lan/LANManagedForm.js
++++ b/js/src/lan/LANManagedForm.js
+@@ -32,6 +32,7 @@ LANManagedForm.propTypes = {
+         mode_unmanaged: PropTypes.object,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ LANManagedForm.defaultProps = {
+@@ -39,7 +40,7 @@ LANManagedForm.defaultProps = {
+ };
+ 
+ export default function LANManagedForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     const errors = (formErrors || {});
+     return (
+@@ -55,7 +56,7 @@ export default function LANManagedForm({
+                     (value) => ({ mode_managed: { router_ip: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Network mask")}
+@@ -67,7 +68,7 @@ export default function LANManagedForm({
+                     (value) => ({ mode_managed: { netmask: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <CheckBox
+                 label={_("Enable DHCP")}
+@@ -78,7 +79,7 @@ export default function LANManagedForm({
+                     (value) => ({ mode_managed: { dhcp: { enabled: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.dhcp.enabled && (
+                 <DHCPServerForm
+@@ -86,9 +87,8 @@ export default function LANManagedForm({
+                     formErrors={errors.dhcp ? errors.dhcp : {}}
+                     updateRule={(value) => ({ mode_managed: { dhcp: value } })}
+                     setFormValue={setFormValue}
+-                    routerIP={formData.router_ip}
+ 
+-                    {...props}
++                    disabled={disabled}
+                 />
+             )}
+         </>
+diff --git a/js/src/lan/LANUnmanagedForm.js b/js/src/lan/LANUnmanagedForm.js
+index f226dc9..874fdfa 100644
+--- a/js/src/lan/LANUnmanagedForm.js
++++ b/js/src/lan/LANUnmanagedForm.js
+@@ -35,6 +35,7 @@ LANUnmanagedForm.propTypes = {
+         lan_static: PropTypes.object,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ LANUnmanagedForm.defaultProps = {
+@@ -43,7 +44,7 @@ LANUnmanagedForm.defaultProps = {
+ };
+ 
+ export default function LANUnmanagedForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     const lanType = formData.lan_type;
+ 
+@@ -57,7 +58,7 @@ export default function LANUnmanagedForm({
+                 updateRule={(value) => ({ mode_unmanaged: { lan_dhcp: value } })}
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (lanType === LAN_TYPES.static) {
+@@ -69,7 +70,7 @@ export default function LANUnmanagedForm({
+                 updateRule={(value) => ({ mode_unmanaged: { lan_static: value } })}
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     }
+@@ -85,7 +86,7 @@ export default function LANUnmanagedForm({
+                     (value) => ({ mode_unmanaged: { lan_type: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {lanForm}
+         </>
+diff --git a/js/src/notificationsSettings/CommonForm.js b/js/src/notificationsSettings/CommonForm.js
+index 8044f29..7ae05da 100644
+--- a/js/src/notificationsSettings/CommonForm.js
++++ b/js/src/notificationsSettings/CommonForm.js
+@@ -30,6 +30,7 @@ CommonForm.propTypes = {
+     }).isRequired,
+     formErrors: PropTypes.shape({ to: PropTypes.string }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ CommonForm.defaultProps = {
+@@ -40,7 +41,7 @@ CommonForm.defaultProps = {
+ };
+ 
+ export default function CommonForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -53,7 +54,7 @@ export default function CommonForm({
+ 
+                 onChange={setFormValue((value) => ({ common: { to: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <Select
+                 label={_("Importance")}
+@@ -64,7 +65,7 @@ export default function CommonForm({
+                     (value) => ({ common: { severity_filter: { $set: parseInt(value) } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <CheckBox
+                 label={_("Send news")}
+@@ -73,7 +74,7 @@ export default function CommonForm({
+ 
+                 onChange={setFormValue((value) => ({ common: { send_news: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/notificationsSettings/NotificationsEmailSettingsForm.js b/js/src/notificationsSettings/NotificationsEmailSettingsForm.js
+index 118c7e8..cbe3bef 100644
+--- a/js/src/notificationsSettings/NotificationsEmailSettingsForm.js
++++ b/js/src/notificationsSettings/NotificationsEmailSettingsForm.js
+@@ -40,6 +40,7 @@ NotificationsEmailSettingsForm.propTypes = {
+         common: PropTypes.object,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ NotificationsEmailSettingsForm.defaultProps = {
+@@ -50,7 +51,7 @@ NotificationsEmailSettingsForm.defaultProps = {
+ };
+ 
+ export default function NotificationsEmailSettingsForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     let smtpForm = null;
+     if (formData.smtp_type === "turris") {
+@@ -59,7 +60,7 @@ export default function NotificationsEmailSettingsForm({
+                 formData={formData.smtp_turris}
+                 formErrors={formErrors.smtp_turris}
+                 setFormValue={setFormValue}
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (formData.smtp_type === "custom") {
+@@ -68,7 +69,7 @@ export default function NotificationsEmailSettingsForm({
+                 formData={formData.smtp_custom}
+                 formErrors={formErrors.smtp_custom}
+                 setFormValue={setFormValue}
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     }
+@@ -83,7 +84,7 @@ export default function NotificationsEmailSettingsForm({
+                     (value) => ({ enabled: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.enabled
+                 ? (
+@@ -99,14 +100,14 @@ export default function NotificationsEmailSettingsForm({
+                                 (value) => ({ smtp_type: { $set: value } }),
+                             )}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                         <CommonForm
+                             formData={formData.common}
+                             formErrors={formErrors.common}
+                             setFormValue={setFormValue}
+ 
+-                            {...props}
++                            disabled={disabled}
+                         />
+                         {smtpForm}
+                     </>
+diff --git a/js/src/notificationsSettings/SMTPCustomForm.js b/js/src/notificationsSettings/SMTPCustomForm.js
+index 135dc77..89ffc7b 100644
+--- a/js/src/notificationsSettings/SMTPCustomForm.js
++++ b/js/src/notificationsSettings/SMTPCustomForm.js
+@@ -37,6 +37,7 @@ SMTPCustomForm.propTypes = {
+         password: PropTypes.string,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ SMTPCustomForm.defaultProps = {
+@@ -47,7 +48,7 @@ SMTPCustomForm.defaultProps = {
+ };
+ 
+ export default function SMTPCustomForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -62,7 +63,7 @@ export default function SMTPCustomForm({
+ 
+                 onChange={setFormValue((value) => ({ smtp_custom: { from: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Server address")}
+@@ -73,7 +74,7 @@ export default function SMTPCustomForm({
+ 
+                 onChange={setFormValue((value) => ({ smtp_custom: { host: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <NumberInput
+                 label={_("Server port")}
+@@ -84,7 +85,7 @@ export default function SMTPCustomForm({
+ 
+                 onChange={setFormValue((value) => ({ smtp_custom: { port: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <Select
+                 label={_("Security")}
+@@ -93,7 +94,7 @@ export default function SMTPCustomForm({
+ 
+                 onChange={setFormValue((value) => ({ smtp_custom: { security: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("User")}
+@@ -101,7 +102,7 @@ export default function SMTPCustomForm({
+ 
+                 onChange={setFormValue((value) => ({ smtp_custom: { user: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <PasswordInput
+                 label={_("Password")}
+@@ -109,7 +110,7 @@ export default function SMTPCustomForm({
+                 value={formData.password || ""}
+                 onChange={setFormValue((value) => ({ smtp_custom: { password: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+ 
+         </>
+diff --git a/js/src/notificationsSettings/SMTPTurrisForm.js b/js/src/notificationsSettings/SMTPTurrisForm.js
+index 0457376..f2bfb25 100644
+--- a/js/src/notificationsSettings/SMTPTurrisForm.js
++++ b/js/src/notificationsSettings/SMTPTurrisForm.js
+@@ -16,6 +16,7 @@ SMTPTurrisForm.propTypes = {
+     formData: PropTypes.shape({ sender_name: PropTypes.string }).isRequired,
+     formErrors: PropTypes.shape({ sender_name: PropTypes.string }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ SMTPTurrisForm.defaultProps = {
+@@ -26,7 +27,7 @@ SMTPTurrisForm.defaultProps = {
+ };
+ 
+ export default function SMTPTurrisForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -40,7 +41,7 @@ export default function SMTPTurrisForm({
+                     (value) => ({ smtp_turris: { sender_name: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/packageManagement/updateSettings/forms/RestartAfterUpdateForm.js b/js/src/packageManagement/updateSettings/forms/RestartAfterUpdateForm.js
+index 66ff2d8..abe2dac 100644
+--- a/js/src/packageManagement/updateSettings/forms/RestartAfterUpdateForm.js
++++ b/js/src/packageManagement/updateSettings/forms/RestartAfterUpdateForm.js
+@@ -28,6 +28,7 @@ RestartAfterUpdateForm.propTypes = {
+         delay: PropTypes.string,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ RestartAfterUpdateForm.defaultProps = {
+@@ -35,7 +36,7 @@ RestartAfterUpdateForm.defaultProps = {
+ };
+ 
+ export default function RestartAfterUpdateForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     const rebootTime = moment(formData.time, "HH:mm");
+     return (
+@@ -51,7 +52,7 @@ export default function RestartAfterUpdateForm({
+ 
+                 onChange={setFormValue((value) => ({ reboots: { delay: { $set: value } } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <DataTimeInput
+                 label={_("Reboot time")}
+@@ -74,7 +75,7 @@ export default function RestartAfterUpdateForm({
+                     }
+                 }
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/packageManagement/updateSettings/forms/UpdateApprovalForm.js b/js/src/packageManagement/updateSettings/forms/UpdateApprovalForm.js
+index c4dab3c..6c18e62 100644
+--- a/js/src/packageManagement/updateSettings/forms/UpdateApprovalForm.js
++++ b/js/src/packageManagement/updateSettings/forms/UpdateApprovalForm.js
+@@ -37,6 +37,7 @@ UpdateApprovalForm.propTypes = {
+     formErrors: PropTypes.shape({
+         delay: PropTypes.string,
+     }),
++    disabled: PropTypes.bool,
+ };
+ 
+ UpdateApprovalForm.defaultProps = {
+@@ -44,7 +45,7 @@ UpdateApprovalForm.defaultProps = {
+ };
+ 
+ export default function UpdateApprovalForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -66,7 +67,7 @@ export default function UpdateApprovalForm({
+                     setFormValue((value) => ({ approval_settings: { status: { $set: value } } }))
+                 }
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.status === "delayed" ? (
+                 <NumberInput
+@@ -80,7 +81,7 @@ export default function UpdateApprovalForm({
+                         setFormValue((value) => ({ approval_settings: { delay: { $set: value } } }))
+                     }
+ 
+-                    {...props}
++                    disabled={disabled}
+                 />
+             ) : null}
+         </>
+diff --git a/js/src/packageManagement/updateSettings/forms/UpdatesForm.js b/js/src/packageManagement/updateSettings/forms/UpdatesForm.js
+index fb08f35..6e59dc6 100644
+--- a/js/src/packageManagement/updateSettings/forms/UpdatesForm.js
++++ b/js/src/packageManagement/updateSettings/forms/UpdatesForm.js
+@@ -28,10 +28,11 @@ UpdatesForm.propTypes = {
+         reboots: PropTypes.object,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ export default function UpdatesForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -41,7 +42,7 @@ export default function UpdatesForm({
+ 
+                 onChange={setFormValue((value) => ({ enabled: { $set: value } }))}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.enabled
+                 ? (
+@@ -51,7 +52,7 @@ export default function UpdatesForm({
+ 
+                         setFormValue={setFormValue}
+ 
+-                        {...props}
++                        disabled={disabled}
+                     />
+                 )
+                 : null}
+@@ -60,7 +61,7 @@ export default function UpdatesForm({
+                 formErrors={formErrors.reboots}
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/password/CurrentForisPasswordForm.js b/js/src/password/CurrentForisPasswordForm.js
+index 81f02e9..961f1a1 100644
+--- a/js/src/password/CurrentForisPasswordForm.js
++++ b/js/src/password/CurrentForisPasswordForm.js
+@@ -15,9 +15,10 @@ CurrentForisPasswordForm.propTypes = {
+         { currentForisPassword: PropTypes.string },
+     ).isRequired,
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+-export default function CurrentForisPasswordForm({ formData, setFormValue, ...props }) {
++export default function CurrentForisPasswordForm({ formData, setFormValue, disabled }) {
+     return (
+         <PasswordInput
+             withEye
+@@ -28,7 +29,7 @@ export default function CurrentForisPasswordForm({ formData, setFormValue, ...pr
+                 (value) => ({ currentForisPassword: { $set: value } }),
+             )}
+ 
+-            {...props}
++            disabled={disabled}
+         />
+     );
+ }
+diff --git a/js/src/password/ForisPasswordForm.js b/js/src/password/ForisPasswordForm.js
+index 46d0bdf..d4486e6 100644
+--- a/js/src/password/ForisPasswordForm.js
++++ b/js/src/password/ForisPasswordForm.js
+@@ -25,10 +25,11 @@ ForisPasswordForm.propTypes = {
+     ),
+     setFormValue: PropTypes.func.isRequired,
+     postForisPassword: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ export default function ForisPasswordForm({
+-    formData, formErrors, setFormValue, submitButtonState, postForisPassword, ...props
++    formData, formErrors, setFormValue, submitButtonState, postForisPassword, disabled,
+ }) {
+     return (
+         <form onSubmit={postForisPassword}>
+@@ -44,7 +45,7 @@ export default function ForisPasswordForm({
+                     (value) => ({ newForisPassword: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <CheckBox
+                 label={_("Use same password for advanced administration (root)")}
+@@ -58,7 +59,7 @@ export default function ForisPasswordForm({
+                     (value) => ({ sameForRoot: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <div className="text-right">
+                 <SubmitButton
+diff --git a/js/src/password/RootPasswordForm.js b/js/src/password/RootPasswordForm.js
+index 70a61d8..6686032 100644
+--- a/js/src/password/RootPasswordForm.js
++++ b/js/src/password/RootPasswordForm.js
+@@ -22,10 +22,11 @@ RootPasswordForm.propTypes = {
+     formErrors: PropTypes.shape({ newRootPassword: PropTypes.string }),
+     setFormValue: PropTypes.func.isRequired,
+     postRootPassword: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ export default function RootPasswordForm({
+-    formData, formErrors, setFormValue, submitButtonState, postRootPassword, ...props
++    formData, formErrors, setFormValue, submitButtonState, postRootPassword, disabled,
+ }) {
+     return (
+         <form onSubmit={postRootPassword} className="mt-3">
+@@ -49,7 +50,7 @@ through the <a href="%s">LuCI web interface</a> or via SSH.`,
+                     (value) => ({ newRootPassword: { $set: value } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <div className="text-right">
+                 <SubmitButton
+diff --git a/js/src/regionAndTime/TimeForm.js b/js/src/regionAndTime/TimeForm.js
+index 723a011..d99d43b 100644
+--- a/js/src/regionAndTime/TimeForm.js
++++ b/js/src/regionAndTime/TimeForm.js
+@@ -45,6 +45,7 @@ TimeForm.propTypes = {
+     }).isRequired,
+ 
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ TimeForm.defaultProps = {
+@@ -55,7 +56,7 @@ TimeForm.defaultProps = {
+ };
+ 
+ export default function TimeForm({
+-    ws, formData, formErrors, setFormValue, ...props
++    ws, formData, formErrors, setFormValue, disabled,
+ }) {
+     const [ntpData, triggerNTP] = useNTPDate(ws);
+     useEffect(() => {
+@@ -102,7 +103,7 @@ export default function TimeForm({
+                     (value) => ({ time_settings: { how_to_set_time: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {data.how_to_set_time === "ntp" ? <NTPServersList servers={data.ntp_servers} /> : null}
+             <DataTimeInput
+@@ -112,8 +113,6 @@ export default function TimeForm({
+ 
+                 onChange={onDataTimeChangeHandler}
+ 
+-                {...props}
+-
+                 disabled={data.how_to_set_time !== "manual" || ntpData.state === API_STATE.SENDING}
+             >
+                 <div className="input-group-append">
+diff --git a/js/src/wan/MACForm.js b/js/src/wan/MACForm.js
+index 4bc8bac..d772a9e 100644
+--- a/js/src/wan/MACForm.js
++++ b/js/src/wan/MACForm.js
+@@ -26,6 +26,7 @@ MACForm.propTypes = {
+         custom_mac: PropTypes.string,
+     }),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ MACForm.defaultProps = {
+@@ -35,7 +36,7 @@ MACForm.defaultProps = {
+ };
+ 
+ export default function MACForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     const macSettings = formData.mac_settings;
+     const errors = (formErrors || {}).mac_settings || {};
+@@ -51,7 +52,7 @@ export default function MACForm({
+                     (value) => ({ mac_settings: { custom_mac_enabled: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {macSettings.custom_mac_enabled
+                 ? (
+@@ -66,7 +67,7 @@ export default function MACForm({
+                             (value) => ({ mac_settings: { custom_mac: { $set: value } } }),
+                         )}
+ 
+-                        {...props}
++                        disabled={disabled}
+                     />
+                 )
+                 : null}
+diff --git a/js/src/wan/WAN6Form.js b/js/src/wan/WAN6Form.js
+index 13e306a..165a2e1 100644
+--- a/js/src/wan/WAN6Form.js
++++ b/js/src/wan/WAN6Form.js
+@@ -74,6 +74,7 @@ WAN6Form.propTypes = {
+     }).isRequired,
+     formErrors: PropTypes.shape(FIELDS_PROP_TYPES),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ WAN6Form.defaultProps = {
+@@ -83,7 +84,7 @@ WAN6Form.defaultProps = {
+ };
+ 
+ export default function WAN6Form({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) { /* eslint-disable react/prop-types */
+     const wan6Settings = formData.wan6_settings;
+     const wan6Type = wan6Settings.wan6_type;
+@@ -98,7 +99,7 @@ export default function WAN6Form({
+                 formErrors={errors.wan6_dhcpv6}
+                 last_seen_duid={last_seen_duid}
+ 
+-                {...props}
++                disabled={disabled}
+ 
+                 setFormValue={setFormValue}
+             />
+@@ -111,7 +112,7 @@ export default function WAN6Form({
+ 
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (wan6Type === "6to4") {
+@@ -123,7 +124,7 @@ export default function WAN6Form({
+ 
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (wan6Type === "6in4") {
+@@ -135,7 +136,7 @@ export default function WAN6Form({
+ 
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     }
+@@ -152,7 +153,7 @@ export default function WAN6Form({
+                     (value) => ({ wan6_settings: { wan6_type: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {wanForm}
+         </>
+@@ -171,7 +172,7 @@ DHCPv6Form.defaultProps = {
+ };
+ 
+ function DHCPv6Form({
+-    formData, last_seen_duid, formErrors, setFormValue, ...props
++    formData, last_seen_duid, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <TextInput
+@@ -185,7 +186,7 @@ function DHCPv6Form({
+                 (value) => ({ wan6_settings: { wan6_dhcpv6: { duid: { $set: value } } } }),
+             )}
+ 
+-            {...props}
++            disabled={disabled}
+         />
+     );
+ }
+@@ -209,7 +210,7 @@ StaticForm.defaultProps = {
+ };
+ 
+ function StaticForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -224,7 +225,7 @@ function StaticForm({
+                     (value) => ({ wan6_settings: { wan6_static: { ip: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Gateway")}
+@@ -236,7 +237,7 @@ function StaticForm({
+                     (value) => ({ wan6_settings: { wan6_static: { gateway: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Prefix")}
+@@ -249,7 +250,7 @@ function StaticForm({
+                     (value) => ({ wan6_settings: { wan6_static: { network: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("DNS server 1")}
+@@ -261,7 +262,7 @@ function StaticForm({
+                     (value) => ({ wan6_settings: { wan6_static: { dns1: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("DNS server 2")}
+@@ -273,7 +274,7 @@ function StaticForm({
+                     (value) => ({ wan6_settings: { wan6_static: { dns2: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+@@ -290,7 +291,7 @@ _6to4Form.defaultProps = {
+ };
+ 
+ function _6to4Form({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <TextInput
+@@ -304,7 +305,7 @@ function _6to4Form({
+                 (value) => ({ wan6_settings: { wan6_6to4: { ipv4_address: { $set: value } } } }),
+             )}
+ 
+-            {...props}
++            disabled={disabled}
+         />
+     );
+ }
+@@ -328,7 +329,7 @@ _6in4Form.defaultProps = {
+ };
+ 
+ function _6in4Form({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -343,7 +344,7 @@ function _6in4Form({
+                     (value) => ({ wan6_settings: { wan6_6in4: { server_ipv4: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Routed IPv6 prefix")}
+@@ -356,7 +357,7 @@ function _6in4Form({
+                     (value) => ({ wan6_settings: { wan6_6in4: { ipv6_prefix: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <NumberInput
+                 label={_("MTU")}
+@@ -370,7 +371,7 @@ function _6in4Form({
+                     (value) => ({ wan6_settings: { wan6_6in4: { mtu: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <CheckBox
+                 label="Dynamic IPv4 handling"
+@@ -384,7 +385,7 @@ function _6in4Form({
+                     }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {formData.dynamic_ipv4.enabled
+                 ? (
+@@ -394,7 +395,7 @@ function _6in4Form({
+ 
+                         setFormValue={setFormValue}
+ 
+-                        {...props}
++                        disabled={disabled}
+                     />
+                 )
+                 : null}
+@@ -419,7 +420,7 @@ DynamicIPv4Form.defaultProps = {
+ };
+ 
+ function DynamicIPv4Form({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -438,7 +439,7 @@ function DynamicIPv4Form({
+                     }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Username")}
+@@ -454,7 +455,7 @@ function DynamicIPv4Form({
+                     }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("Key")}
+@@ -471,7 +472,7 @@ function DynamicIPv4Form({
+                     }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+diff --git a/js/src/wan/WANForm.js b/js/src/wan/WANForm.js
+index c32fc10..1ddc767 100644
+--- a/js/src/wan/WANForm.js
++++ b/js/src/wan/WANForm.js
+@@ -40,6 +40,7 @@ WANForm.propTypes = {
+     }).isRequired,
+     formErrors: PropTypes.shape(FIELDS_PROP_TYPES),
+     setFormValue: PropTypes.func.isRequired,
++    disabled: PropTypes.bool,
+ };
+ 
+ WANForm.defaultProps = {
+@@ -48,7 +49,7 @@ WANForm.defaultProps = {
+ };
+ 
+ export default function WANForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) { /* eslint-disable react/prop-types */
+     const wanSettings = formData.wan_settings;
+     const errors = (formErrors || {}).wan_settings || {};
+@@ -64,7 +65,7 @@ export default function WANForm({
+                 updateRule={(value) => ({ wan_settings: { wan_dhcp: value } })}
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (wanType === WAN_TYPES.static) {
+@@ -76,7 +77,7 @@ export default function WANForm({
+                 updateRule={(value) => ({ wan_settings: { wan_static: value } })}
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     } else if (wanType === WAN_TYPES.pppoe) {
+@@ -87,7 +88,7 @@ export default function WANForm({
+ 
+                 setFormValue={setFormValue}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         );
+     }
+@@ -104,7 +105,7 @@ export default function WANForm({
+                     (value) => ({ wan_settings: { wan_type: { $set: value } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             {wanForm}
+         </>
+@@ -121,7 +122,7 @@ PPPoEForm.defaultProps = {
+ };
+ 
+ function PPPoEForm({
+-    formData, formErrors, setFormValue, ...props
++    formData, formErrors, setFormValue, disabled,
+ }) {
+     return (
+         <>
+@@ -135,7 +136,7 @@ function PPPoEForm({
+                     (value) => ({ wan_settings: { wan_pppoe: { username: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+             <TextInput
+                 label={_("PAP/CHAP password")}
+@@ -147,7 +148,7 @@ function PPPoEForm({
+                     (value) => ({ wan_settings: { wan_pppoe: { password: { $set: value } } } }),
+                 )}
+ 
+-                {...props}
++                disabled={disabled}
+             />
+         </>
+     );
+-- 
+2.26.2
+
