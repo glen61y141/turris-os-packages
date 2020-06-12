@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2016-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.2
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -58,6 +58,7 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
+	$(INSTALL_BIN) ./files/ipv6-resolver-reload.hotplug $(1)/etc/hotplug.d/iface/40-ipv6-resolver-reload
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
 	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
