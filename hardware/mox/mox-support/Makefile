@@ -2,19 +2,21 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=30
+PKG_RELEASE:=30
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
-	VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mtd +kmod-gpio-button-hotplug
+define Package/mox-support
+  TITLE:=Turris Mox essential support
+  VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
+    +mtd \
+    +kmod-gpio-button-hotplug
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/mox-support/description
  Contains supporting files for Turris MOX.
 endef
 
@@ -22,14 +24,13 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
 
-define Build/Configure
-endef
+Build/Configure:=:
 
 define Build/Compile
 	$(KERNEL_MAKE) Image dtbs
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/mox-support/install
 	$(INSTALL_DIR) $(1)/boot
 	$(CP) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/armada-3720-turris-mox.dtb "$(1)"/boot
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot.scr
@@ -53,4 +54,4 @@ define Package/$(PKG_NAME)/install
 	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,mox-support))
