@@ -31,12 +31,12 @@ define Package/sentinel-proxy
   TITLE:=Proxy
   URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy
   DEPENDS:= \
-  +czmq \
-  +libpaho-mqtt-c \
-  +zlib \
-  +libopenssl \
-  +libconfig \
-  +sentinel-certgen
+    +czmq \
+    +libpaho-mqtt-c \
+    +zlib \
+    +libopenssl \
+    +libconfig \
+    +sentinel-certgen
 endef
 
 define Package/sentinel-proxy/description
