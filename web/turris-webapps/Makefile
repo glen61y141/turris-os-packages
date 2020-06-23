@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
-PKG_VERSION:=1.2
-PKG_RELEASE:=3
+PKG_VERSION:=1.3
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -32,6 +32,7 @@ define Package/turris-webapps/install
 	$(INSTALL_DATA) ./files/turris-root.conf $(1)/etc/lighttpd/conf.d/turis-root.conf
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_BIN) ./files/turris-root-cgi $(1)/usr/share/turris-webapps
+	$(INSTALL_BIN) ./files/turris-webapps-json-cgi $(1)/usr/share/turris-webapps
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(INSTALL_DATA) ./files/generic-web.svg $(1)/www/webapps-icons/
 endef
