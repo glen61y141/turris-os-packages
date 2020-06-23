@@ -12,9 +12,9 @@ if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
 	NEW_WAN="eth2"
 else
 	# Turris Omnia
-	CPU_SOCKET_1="eth0"
+	CPU_LAN_1="eth0"
 	CPU_TRUNK_1="5"
-	CPU_SOCKET_2="eth2"
+	CPU_LAN_2="eth2"
 	CPU_TRUNK_2="6"
 	WAN="eth1"
 	NEW_WAN="eth2"
@@ -86,6 +86,7 @@ interface_handle() {
 				append_lan_ports
 				;;
 			"${WAN}"*)
+				# Replace new old wan with new one and keep any VLAN configuration
 				append new_ifname "${NEW_WAN}${ifn#${WAN}}"
 				;;
 			*)
@@ -109,11 +110,11 @@ interface_handle() {
 config_foreach interface_handle interface
 
 
-switch_vlan_remove() {
+network_section_remove() {
 	uci delete "network.$1"
 }
-config_foreach switch_vlan_remove switch
-config_foreach switch_vlan_remove switch_vlan
-config_foreach switch_vlan_remove switch_port
+config_foreach network_section_remove switch
+config_foreach network_section_remove switch_vlan
+config_foreach network_section_remove switch_port
 
 uci commit network
