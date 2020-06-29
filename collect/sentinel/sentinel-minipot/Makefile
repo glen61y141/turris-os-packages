@@ -48,7 +48,7 @@ define Package/sentinel-minipot/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-minipot-telnet
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
-	$(INSTALL_BIN) ./files/firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-minipot.sh
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-minipot.sh
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-minipot-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/60_minipot.sh
