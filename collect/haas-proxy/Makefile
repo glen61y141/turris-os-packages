@@ -58,7 +58,7 @@ define Py3Package/haas-proxy/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-haas-proxy
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
-	$(INSTALL_BIN) ./files/firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-haas-proxy.sh
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-haas-proxy.sh
 endef
 
 define Package/haas-proxy/conffiles
