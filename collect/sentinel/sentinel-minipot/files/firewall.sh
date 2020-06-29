@@ -20,7 +20,7 @@ port_redirect_zone() {
 	[ "$enabled" != "0" ] || return 0
 
 	[ -z "$telnet_port" ] || \
-		iptables_redirect "$zone" 23 "$local_port" "Minipot Telnet"
+		iptables_redirect "$zone" 23 "$telnet_port" "Minipot Telnet"
 }
 
 config_load "firewall"
