@@ -46,8 +46,8 @@ define Package/sentinel-dynfw-client/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-dynfw-client
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
-	$(INSTALL_BIN) ./files/firewall.sh $(1)/usr/libexec/sentinel/firewall.d/50-dynfw.sh
-	$(INSTALL_DATA) ./files/firewall-utils.sh $(1)/usr/libexec/sentinel/firewall.d/dynfw-utils.sh
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/50-dynfw.sh
+	$(INSTALL_DATA) ./files/sentinel-firewall-utils.sh $(1)/usr/libexec/sentinel/firewall.d/dynfw-utils.sh
 endef
 
 $(eval $(call BuildPackage,sentinel-dynfw-client))
