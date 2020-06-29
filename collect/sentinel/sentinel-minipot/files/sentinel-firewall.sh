@@ -14,7 +14,7 @@ config_get telnet_port "minipot" "telnet_port" "2333"
 
 port_redirect_zone() {
 	local config_section="$1"
-	local zone enabled_chains
+	local zone enabled
 	config_get zone "$config_section" "name"
 	config_get_bool enabled "$config_section" "sentinel_minipot" "0"
 	[ "$enabled" = "1" ] || return 0
