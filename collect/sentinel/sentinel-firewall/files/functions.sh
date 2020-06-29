@@ -4,7 +4,7 @@ __enable_on_wan_zone() {
 	local section="$1"
 	local zone_name
 	config_get zone_name "$section" "name"
-	[ "$zone_name" != "wan" ] && return 0
+	[ "$zone_name" = "wan" ] || return 0
 
 	local enabled
 	config_get_bool enabled "$section" "$option" ""
