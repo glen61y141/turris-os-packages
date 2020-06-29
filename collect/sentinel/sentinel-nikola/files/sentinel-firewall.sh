@@ -9,7 +9,7 @@ nikola_logging() {
 	local zone enabled
 	config_get zone "$config_section" "name"
 	config_get_bool enabled "$config_section" "sentinel_fwlogs" "0"
-	[ "$enabled" = "0" ] && return 0
+	[ "$enabled" = "1" ] || return 0
 
 	report_operation "Logging of zone '$zone'"
 	for fate in DROP REJECT; do
