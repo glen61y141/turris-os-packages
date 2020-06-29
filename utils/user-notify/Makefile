@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user-notify
 PKG_VERSION:=61.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/user-notify.git
@@ -21,7 +21,7 @@ PKG_LICENSE:=GPL-3.0-or-later
 include $(INCLUDE_DIR)/package.mk
 
 define Package/user-notify
-  TITLE:=user-notify
+  TITLE:=Turris user notifications
   DEPENDS:=+at +msmtp +ca-certificates +crypto-wrapper +sentinel-certgen +gettext-tools +create_notification
 endef
 
@@ -38,7 +38,7 @@ endef
 
 
 define Package/create_notification
-  TITLE:=create_notification
+  TITLE:=Create Turris user notification
   DEPENDS:=+gettext-tools
 endef
 
