@@ -1,3 +1,4 @@
+# These are common helpers for sentinel-firewall scripts.
 
 report_operation() {
 	echo "   *" "$@" >&2
