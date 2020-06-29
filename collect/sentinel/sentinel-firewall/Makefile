@@ -23,6 +23,8 @@ define Package/sentinel-firewall
   DEPENDS:=+firewall
 endef
 
+Build/Compile:=:
+
 define Package/sentinel-firewall/install
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
 	$(INSTALL_BIN) ./files/firewall.sh $(1)/usr/libexec/sentinel/
@@ -32,7 +34,5 @@ define Package/sentinel-firewall/install
 	$(INSTALL_DIR) $(1)/lib/functions
 	$(INSTALL_DATA) ./files/functions.sh $(1)/lib/functions/sentinel-firewall.sh
 endef
-
-Build/Compile:=:
 
 $(eval $(call BuildPackage,sentinel-firewall))
