@@ -9,7 +9,7 @@ dynfw_block() {
 	local zone enabled_chains
 	config_get zone "$config_section" "name"
 	config_get_bool enabled "$config_section" "sentinel_dynfw" "0"
-	[ "$enabled" = "0" ] && return 0
+	[ "$enabled" = "1" ] || return 0
 
 	report_operation "Dynamic blocking on zone '$zone'"
 	for chain in input forward; do
