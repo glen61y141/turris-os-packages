@@ -24,4 +24,4 @@ nikola_logging() {
 }
 
 config_load "firewall"
-config_foreach dynfw_block "zone"
+config_foreach nikola_logging "zone"
