@@ -16,7 +16,7 @@ __enable_on_wan_zone() {
 # to some value.
 # option: option name to enable
 config_firewall_default_enable() (
-	local option="$1"
+	local option="$1" # This is used inside __enable_on_wan_zone
 	config_load "firewall"
 	config_foreach __enable_on_wan_zone "zone"
 	[ -z "$(uci changes firewall)" ] || \
