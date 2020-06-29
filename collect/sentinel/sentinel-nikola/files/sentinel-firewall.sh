@@ -6,7 +6,7 @@ set -e
 
 nikola_logging() {
 	local config_section="$1"
-	local zone enabled_chains
+	local zone enabled
 	config_get zone "$config_section" "name"
 	config_get_bool enabled "$config_section" "sentinel_fwlogs" "0"
 	[ "$enabled" = "0" ] && return 0
