@@ -19,7 +19,7 @@ port_redirect_zone() {
 	config_get_bool enabled "$config_section" "sentinel_minipot" "0"
 	[ "$enabled" != "0" ] || return 0
 
-	[ -z "$telnet_port" ] || \
+	[ "$telnet_port" != "0" ] || \
 		iptables_redirect "$zone" 23 "$telnet_port" "Minipot Telnet"
 }
 
@@ -28,6 +28,6 @@ config_foreach port_redirect_zone "zone"
 
 
 if source_if_exists "$SF_DIR/dynfw-utils.sh"; then
-	[ -z "$telnet_port" ] || \
+	[ "$telnet_port" != "0" ] || \
 		bypass_dynamic_firewall "tcp" "23" "Minipot Telnet"
 fi
