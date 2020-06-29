@@ -3,9 +3,9 @@
 # Make sure that you have following section at the end of /etc/config/firewall:
 #   config include 'sentinel_firewall'
 #		option type 'script'
-#   	option path '/usr/libexec/sentinel/firewall.sh'
-#   	option family 'any'
-#   	option reload '1'
+#		option path '/usr/libexec/sentinel/firewall.sh'
+#		option family 'any'
+#		option reload '1'
 
 cd /usr/libexec/sentinel/firewall.d
 for module in ./*; do
