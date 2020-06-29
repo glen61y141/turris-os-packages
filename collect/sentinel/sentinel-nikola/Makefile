@@ -61,7 +61,7 @@ define Py3Package/sentinel-nikola/install
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-nikola
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
-	$(INSTALL_BIN) ./files/firewall.sh $(1)/usr/libexec/sentinel/firewall.d/60-nikola.sh
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/60-nikola.sh
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/50_nikola.sh
