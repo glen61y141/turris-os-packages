@@ -1,6 +1,17 @@
 . /lib/functions.sh
 
-__enable_on_wan_zone() {
+# This function enables given option on firewall zone wan unless it is already set
+# to some value.
+# option: option name to enable
+config_firewall_default_enable() (
+	local option="$1" # This is used inside __enable_on_wan_zone
+	config_load "firewall"
+	config_foreach __enable_on_wan_by_default "zone"
+	[ -z "$(uci changes firewall)" ] || \
+		uci commit firewall
+)
+
+__enable_on_wan_by_default() {
 	local section="$1"
 	local zone_name
 	config_get zone_name "$section" "name"
@@ -11,14 +22,3 @@ __enable_on_wan_zone() {
 	[ -n "$enabled" ] || \
 		uci -q set "firewall.$section.$option=1"
 }
-
-# This function enables given option on firewall zone wan unless it is already set
-# to some value.
-# option: option name to enable
-config_firewall_default_enable() (
-	local option="$1" # This is used inside __enable_on_wan_zone
-	config_load "firewall"
-	config_foreach __enable_on_wan_zone "zone"
-	[ -z "$(uci changes firewall)" ] || \
-		uci commit firewall
-)
