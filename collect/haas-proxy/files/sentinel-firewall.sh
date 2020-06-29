@@ -11,7 +11,7 @@ config_get local_port "settings" "local_port" "2525"
 
 port_redirect_zone() {
 	local config_section="$1"
-	local zone enabled_chains
+	local zone enabled
 	config_get zone "$config_section" "name"
 	config_get_bool enabled "$config_section" "haas_proxy" "0"
 	[ "$enabled" = "1" ] || return 0
