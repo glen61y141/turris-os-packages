@@ -17,7 +17,7 @@ port_redirect_zone() {
 	local zone enabled_chains
 	config_get zone "$config_section" "name"
 	config_get_bool enabled "$config_section" "sentinel_minipot" "0"
-	[ "$enabled" != "0" ] || return 0
+	[ "$enabled" = "1" ] || return 0
 
 	[ "$telnet_port" != "0" ] || \
 		iptables_redirect "$zone" 23 "$telnet_port" "Minipot Telnet"
