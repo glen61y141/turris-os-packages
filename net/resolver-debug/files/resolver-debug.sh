@@ -3,6 +3,10 @@ START_DEBUG_CMD="/etc/resolver/resolver-debug.sh start"
 START_DEBUG_DESC="Start resolver debugging"
 STOP_DEBUG_CMD="/etc/resolver/resolver-debug.sh stop"
 STOP_DEBUG_DESC="Stop resolver debugging"
+TEST_DOMAIN_CMD="/etc/resolver/resolver-debug.sh test-domain"
+TEST_DOMAIN_DESC="Test custom domain"
+
+
 PRINT_LOG_CMD="/etc/resolver/resolver-debug.sh print-logs"
 PRINT_LOG_DESC="Print debug log"
 
@@ -32,11 +36,15 @@ run_unbound_command () {
 add_luci_custom_cmd () {
 	local cmd="$1"
 	local description="$2"
+	local enable_arg="$3"
 	local cfg_name
 	cfg_name="$(uci add luci command)"
 
 	uci set luci.$cfg_name.name="$description"
 	uci set luci.$cfg_name.command="$cmd"
+	if [ ! -z "$enable_arg" ]; then
+		uci set luci.$cfg_name.param="$enable_arg"
+	fi
 	uci commit luci
 }
 
@@ -155,6 +163,35 @@ run_test () {
 	run_${QTOOL} *.wilda.rhybar.ecdsa.0skar.cz  # should fail
 }
 
+test_domain() {
+	DOMAIN="$1"
+
+	which dig &> /dev/null
+	if [ "$?" -eq 0 ]; then
+		QTOOL="dig"
+	else
+		QTOOL="nslookup"
+	fi
+
+	RESOLVER="$(uci get resolver.common.prefered_resolver)"
+	ps w | grep ${RESOLVER} |test_log
+
+
+	if [ "${RESOLVER}" == "kresd" ]; then
+		echo "== Custom domain test ==" |test_log
+		echo "== enable verbose logging (reboot to disable it) ==" |test_log
+		run_kresd_command "verbose(true)"
+		echo "== resolution attempts =="
+		run_${QTOOL} "$DOMAIN" # test domain
+		echo "== disable verbose logging (reboot to disable it) ==" |test_log
+		run_kresd_command "verbose(false)"
+	elif [ "${RESOLVER}" == "unbound" ]; then
+		echo TBD
+	fi
+
+
+}
+
 print_log() {
 	echo "====Log===="
 	date
@@ -171,6 +208,7 @@ Help
 start		- start resolver debug
 stop		- stop resolver debug
 add-btn		- add buttons to luci custom command
+test-domain	- test domain given as argument
 remove-btn	- remove buttons from luci custom command
 EOF
 }
@@ -188,6 +226,11 @@ case $cmd in
 		stop_debug
 		echo "Debug ended" | test_log
 	;;
+	test-domain)
+		echo "Test domain"
+		test_domain "$2"
+		echo "Debug ended" | test_log
+	;;
 	print-logs)
 		echo "Print logs"
 		print_log
@@ -196,12 +239,14 @@ case $cmd in
 		echo "Add btn to luci custom command"
 		add_luci_custom_cmd "$START_DEBUG_CMD" "$START_DEBUG_DESC"
 		add_luci_custom_cmd "$STOP_DEBUG_CMD" "$STOP_DEBUG_DESC"
+		add_luci_custom_cmd "$TEST_DOMAIN_CMD" "$TEST_DOMAIN_DESC" "1"
 		add_luci_custom_cmd "$PRINT_LOG_CMD" "$PRINT_LOG_DESC"
 	;;
 	remove-btn)
 		echo "Remove btn from luci custom command"
 		remove_luci_custom_cmd "$START_DEBUG_CMD"
 		remove_luci_custom_cmd "$STOP_DEBUG_CMD"
+		remove_luci_custom_cmd "$TEST_DOMAIN_CMD"
 		remove_luci_custom_cmd "$PRINT_LOG_CMD"
 	;;
 	help|*)
