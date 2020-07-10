@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+
+START=20
+start() {
+	uci set updater.autorun.enable=1
+	uci set updater.autorun.approvals=0
+	uci set sentinel.main.agreed_with_eula_version=1
+	uci set sentinel.minipot.enabled=1
+	uci set sentinel.nikola.enabled=1
+	uci commit
+}
+
+stop() {
+	:
+}
