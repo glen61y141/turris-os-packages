@@ -24,7 +24,7 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
 
-Build/Configure:=:
+Build/Configure:=
 
 define Build/Compile
 	$(KERNEL_MAKE) Image dtbs
