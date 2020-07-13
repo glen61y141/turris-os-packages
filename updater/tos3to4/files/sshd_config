@@ -1,0 +1,16 @@
+#!/bin/sh
+# Migrate SSH daemon configuration file if configuration was modified compared to
+# default one.
+
+configfile="/var/etc/ssh/sshd_config"
+default="sshd.@openssh[0]=openssh
+sshd.@openssh[0].Port='22' '830'
+sshd.@openssh[0].PermitRootLogin='yes'
+sshd.@openssh[0].AuthorizedKeysFile='.ssh/authorized_keys'
+sshd.@openssh[0].Subsystem='sftp /usr/lib/sftp-server' 'netconf /usr/bin/nuci'"
+
+
+if [ "$(uci show sshd)" != "$default" ] && [ -f "$configfile" ]; then
+	cp "$configfile" "/etc/ssh/sshd_config"
+	/etc/init.d/sshd restart
+fi
