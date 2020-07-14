@@ -49,7 +49,7 @@ add_luci_custom_cmd () {
 }
 
 remove_luci_custom_cmd () {
-	cmd_arg="$1"
+	cmd_arg=$(echo "$1"|awk '{print $1}')
 	for item in $(uci show luci|grep "@command"|grep ".command=")
 	do
 		num=$(echo "$item"|awk -F"[" '{print $2}'|awk -F"]" '{print $1}')
