@@ -49,9 +49,6 @@ subnet_to_ip() {
 . /lib/functions/network.sh
 . /lib/functions.sh
 
-set -x
-exec 2> /tmp/hotplug-debug
-
 # Check that we have alternative IPs
 config_load network
 config_get alt_ips lan "alternative_ip"
