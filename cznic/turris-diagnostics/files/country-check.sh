@@ -6,7 +6,7 @@ COUNTRY_WIRELESS_SET='true'
 
 MISSING_COUNTRY_MESSAGE=$(cat <<-EOF
 	Your system does not have a country (region) set correctly.
-	Please go to Foris interface, make sure you have set correct country in
+	Please go to the Foris web interface, make sure you have set correct country in
 	the "Region and time" tab and then "Save" your wireless configuration
 	in the "Wi-Fi" tab again.
 EOF
