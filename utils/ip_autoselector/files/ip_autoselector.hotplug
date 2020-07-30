@@ -46,8 +46,8 @@ subnet_to_ip() {
 }
 
 # We are working with network and uci
-. /lib/functions/network.sh
 . /lib/functions.sh
+. /lib/functions/network.sh
 
 # Check that we have alternative IPs
 config_load network
