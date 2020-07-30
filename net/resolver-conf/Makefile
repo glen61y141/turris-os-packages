@@ -58,7 +58,7 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
-	$(INSTALL_BIN) ./files/ipv6-resolver-reload.hotplug $(1)/etc/hotplug.d/iface/40-ipv6-resolver-reload
+	$(INSTALL_BIN) ./files/ip-resolver-reload.hotplug $(1)/etc/hotplug.d/iface/40-ip-resolver-reload
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
 	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
