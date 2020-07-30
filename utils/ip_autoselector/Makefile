@@ -9,6 +9,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ip_autoselector
 PKG_VERSION:=1.0.0
+PKG_RELEASE:=1
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
