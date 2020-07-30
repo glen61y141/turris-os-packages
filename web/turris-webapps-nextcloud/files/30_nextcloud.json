@@ -1,0 +1,9 @@
+{
+  "id": "nextcloud",
+  "title": "nextcloud",
+  "url": "/nextcloud",
+  "icon": "/icons/nextcloud.svg",
+  "description": {
+      "en": "Nextcloud is a suite of client-server software for creating and using file hosting services."
+  }
+}
