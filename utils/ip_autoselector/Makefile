@@ -15,8 +15,8 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ip_autoselector
-	TITLE:=Automatically sets non-conflictin prefix on LAN
-	DEPENDS:=ethtool
+  TITLE:=Automatically sets non-conflictin prefix on LAN
+  DEPENDS:=ethtool
 endef
 
 Build/Compile:=:
