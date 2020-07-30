@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ip_autoselector
-PKG_VERSION:=1
+PKG_VERSION:=1.0.0
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
