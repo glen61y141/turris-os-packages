@@ -29,7 +29,7 @@ rotate_subnet_cb() {
 		for iface in $(uci -q get network.lan.ifname); do
 			ethtool -r "$iface"
 		done
-		break
+		exit 0
 	fi
 }
 
