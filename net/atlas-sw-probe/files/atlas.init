@@ -174,5 +174,6 @@ start_service() {
 	procd_set_param command "$SCRIPTS_DIR/bin/ATLAS"
 	procd_set_param stdout "$log_stdout"
 	procd_set_param stderr "$log_stderr"
+	procd_set_param user "atlas"
 	procd_close_instance
 }
