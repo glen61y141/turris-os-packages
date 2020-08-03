@@ -12,9 +12,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/knot/deckard
-
 PKG_SOURCE_VERSION:=a179ddb1b5b67a61dc89a97833520485c49f784b
-PKG_SOURCE:=deckard-$(PKG_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
