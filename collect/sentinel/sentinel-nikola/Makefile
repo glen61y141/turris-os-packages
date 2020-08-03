@@ -54,7 +54,7 @@ define Py3Package/sentinel-nikola/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/cron/nikola $(1)/etc/cron.d/nikola
 	$(INSTALL_DIR) $(1)/etc/logrotate.d/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/logrotate.d/iptables $(1)/etc/logrotate.d/iptables
-	$(INSTALL_DIR) $(1)/usr/share/syslog-ng/include/sentinel-nikola/scl/
+	$(INSTALL_DIR) $(1)/usr/share/syslog-ng/include/scl/sentinel-nikola
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/usr/share/syslog-ng/include/scl/sentinel-nikola/nikola.conf
 
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
