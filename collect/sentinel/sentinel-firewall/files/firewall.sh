@@ -21,7 +21,7 @@ fi
 
 
 # Remove any existing rule
-# (firewall3 removes only fules in chains it knows so we have to do this to potentially clean after ourself)
+# (firewall3 removes only rules in chains it knows so we have to do this to potentially clean after ourself)
 for table in filter nat mangle raw; do
 	iptables -t "$table" -S \
 		| grep -F ' --comment "!sentinel:' \
