@@ -141,12 +141,25 @@ init_unbound() {
     local hostname_config
     local static_domains
     local dynamic_domains
+    local resolv_conf_path
+
+    # Test for resolv.conf.auto new location
+    # https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
+    if [ -f "/tmp/resolv.conf.auto" ]; then
+        resolv_conf_path="/tmp/resolv.conf.auto"
+    elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+        resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
+    else
+        echo "Error! File resolv.conf.auto is missing"
+    fi
+
+
     config_get_bool ignore_root_key common ignore_root_key 0
 
     # Do not try to restore the root key if it's not used
     if [ "$ignore_root_key" = "0" ] ; then
         # Sometimes, the root anchor is broken. We first try unbound-anchor (with and without upstream DNS servers).
-        check_root_key unbound-anchor -f /tmp/resolv.conf.auto
+        check_root_key unbound-anchor -f "$resolv_conf_path"
         check_root_key unbound-anchor
         # unbound-anchor is of no use :-(. Try to restore it from the certificate backup, if there's anything.
         check_root_key cert-backup -x $ROOTKEYFILE
@@ -163,16 +176,16 @@ init_unbound() {
 
     #Server Section
     add_section common server
-    echo '	chroot: ""' >> "$CONFIGFILE"
+    echo '  chroot: ""' >> "$CONFIGFILE"
     set_parameter verbose verbosity 1
     set_multiple_parameters interface interface
     set_parameter port port 53
 
     if [ "$ignore_root_key" = "0" ] ; then
         set_rootkey keyfile
-	# copy rootkey file with right permissions
-	cp "$ROOTKEYFILE" "$ROOTKEYFILE_TMP"
-	chown $USERNAME:$GROUP "$ROOTKEYFILE_TMP"
+    # copy rootkey file with right permissions
+    cp "$ROOTKEYFILE" "$ROOTKEYFILE_TMP"
+    chown $USERNAME:$GROUP "$ROOTKEYFILE_TMP"
         add_parameter "$ROOTKEYFILE_TMP" "auto-trust-anchor-file"
     fi
 
@@ -253,18 +266,18 @@ init_unbound() {
     else
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
-        SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
+        SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' "$resolv_conf_path" | sort)
         if [ "$SERVERS" ] ; then
             (
             echo 'forward-zone:'
-            echo '	name: "."'
-            echo '	forward-first: yes'
+            echo '  name: "."'
+            echo '  forward-first: yes'
             for SERVER in $SERVERS ; do
-                echo "	forward-addr: $SERVER"
+                echo "  forward-addr: $SERVER"
             done
             ) >> "$CONFIGFILE"
         fi
-        md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
+        md5sum "$resolv_conf_path" | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
     fi
     fi
 }
@@ -281,18 +294,18 @@ print_unbound_forward_config() {
     # check ca_file
     if [ ! -z "$ca_file" ] && [ -f "$ca_file" ] && [ ! -z "$hostname" ]; then
         echo "server:">>$CONFIGFILE
-        echo "	tls-cert-bundle: \"$ca_file\" ">>$CONFIGFILE
+        echo "  tls-cert-bundle: \"$ca_file\" ">>$CONFIGFILE
     fi
 
     # set forwarding
     echo "forward-zone:">>$CONFIGFILE
-    echo '	name: "."'>>$CONFIGFILE
+    echo '  name: "."'>>$CONFIGFILE
 
     # check tls forwarding
     if [ "$enable_tls" == "1" ]; then
-        echo "	forward-tls-upstream: yes">>$CONFIGFILE
+        echo "  forward-tls-upstream: yes">>$CONFIGFILE
     else
-        echo "	forward-tls-upstream: no">>$CONFIGFILE
+        echo "  forward-tls-upstream: no">>$CONFIGFILE
     fi
 
     for ip in $ip_list
@@ -306,9 +319,9 @@ print_unbound_forward_config() {
                 val_ipport="$ip@$port"
             fi
             if [ ! -z "$hostname" ]; then
-                echo "	forward-addr: $val_ipport#$hostname" >> $CONFIGFILE
+                echo "  forward-addr: $val_ipport#$hostname" >> $CONFIGFILE
             else
-                echo "	forward-addr: $val_ipport" >> $CONFIGFILE
+                echo "  forward-addr: $val_ipport" >> $CONFIGFILE
             fi
         fi
     done
