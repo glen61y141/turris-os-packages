@@ -1,5 +1,8 @@
 #!/bin/sh
 
+. /lib/functions.sh
+
+
 allowed_to_run() {
 	local component_name="$1";
 	agreed_with_eula "${component_name}" && component_enabled "${component_name}"
