@@ -1,6 +1,7 @@
 #!/bin/sh
 
-. /lib/functions.sh
+# source OpenWrt functions if not sourced yet
+command -v config_load > /dev/null || . /lib/functions.sh
 
 
 allowed_to_run() {
