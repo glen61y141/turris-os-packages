@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=5.1.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -45,23 +45,35 @@ define Package/knot-resolver/description
 endef
 
 MESON_ARGS+= \
-  -Ddnstap=disabled \
+  -Dinstall_kresd_conf=disabled \
+  -Dinstall_root_keys=disabled \
+  -Duser=kresd \
+  -Dgroup=kresd \
   -Dcapng=disabled \
-  --prefix=/usr
+  -Dclient=disabled \
+  -Dutils=disabled \
+  -Ddoc=disabled \
+  -Dconfig_tests=disabled \
+  -Dunit_tests=disabled \
+  -Dprefix=/usr \
+  -Dkeyfile_default=/etc/root.keys
 
 define Package/knot-resolver/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/kresd $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/kresd $(1)/usr/sbin/
 
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*so* $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib/knot-resolver
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/knot-resolver/{*.lua,*.so} $(1)/usr/lib/knot-resolver/
+	$(INSTALL_DIR) $(1)/usr/lib/knot-resolver/kres_modules
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/knot-resolver/kres_modules/{*.lua,*.so} $(1)/usr/lib/knot-resolver/kres_modules/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
 
-	$(INSTALL_DIR) $(1)/etc/kresd
-	$(CP) $(PKG_INSTALL_DIR)/etc/kresd/root.hints $(1)/etc/kresd
+	$(INSTALL_DIR) $(1)/etc/knot-resolver
+	$(CP) $(PKG_INSTALL_DIR)/etc/knot-resolver/root.hints $(1)/etc/knot-resolver/
 
+	$(INSTALL_DIR) $(1)/etc/kresd
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef

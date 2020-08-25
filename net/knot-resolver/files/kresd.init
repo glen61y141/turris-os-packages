@@ -7,7 +7,7 @@ STOP=00
 
 USE_PROCD=1
 EXTRA_COMMANDS="test_ipv6"
-PROG=/usr/bin/kresd
+PROG=/usr/sbin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
