@@ -28,15 +28,26 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/devel/meson/meson.mk
 
-define Package/knot-resolver
+define Package/knot-resolver/Default
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=IP Addresses and Names
   TITLE:=Knot DNS Resolver
   URL:=https://www.knot-resolver.cz
-  DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb
+  DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb 
   PROVIDES:=dns-resolver
   USERID:=kresd=3536:kresd=3536
+endef
+
+define Package/knot-resolver
+$(call Package/knot-resolver/Default)
+  VARIANT:=normal
+endef
+
+define Package/knot-resolver-dnstap
+$(call Package/knot-resolver/Default)
+  DEPENDS+=+libprotobuf-c +libfstrm
+  VARIANT:=dnstap
 endef
 
 define Package/knot-resolver/description
@@ -44,27 +55,48 @@ define Package/knot-resolver/description
   implementation, including both a resolver library and a daemon.
 endef
 
+Package/knot-resolver-dnstap/description = $(Package/knot-resolver/description)
+
 MESON_ARGS+= \
-  -Ddnstap=disabled \
+  -Dinstall_kresd_conf=disabled \
+  -Dinstall_root_keys=disabled \
+  -Duser=kresd \
+  -Dgroup=kresd \
   -Dcapng=disabled \
-  --prefix=/usr
+  -Dclient=disabled \
+  -Dutils=disabled \
+  -Dconfig_tests=disabled \
+  -Dunit_tests=disabled \
+  -Dprefix=/usr \
+  -Dkeyfile_default=/etc/root.keys
+
+ifeq ($(BUILD_VARIANT),dnstap)
+MESON_ARGS += -Ddnstap=enabled
+else
+MESON_ARGS += -Ddnstap=disabled
+endif
 
 define Package/knot-resolver/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/kresd $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/kresd $(1)/usr/sbin/
 
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*so* $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib/knot-resolver
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/knot-resolver/{*.lua,*.so} $(1)/usr/lib/knot-resolver/
+	$(INSTALL_DIR) $(1)/usr/lib/knot-resolver/kres_modules
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/knot-resolver/kres_modules/{*.lua,*.so} $(1)/usr/lib/knot-resolver/kres_modules/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
 
-	$(INSTALL_DIR) $(1)/etc/kresd
-	$(CP) $(PKG_INSTALL_DIR)/etc/kresd/root.hints $(1)/etc/kresd
+	$(INSTALL_DIR) $(1)/etc/knot-resolver
+	$(CP) $(PKG_INSTALL_DIR)/etc/knot-resolver/root.hints $(1)/etc/knot-resolver/
 
+	$(INSTALL_DIR) $(1)/etc/kresd
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
+
+Package/knot-resolver-dnstap/install = $(Package/knot-resolver/install)
 
 define Package/knot-resolver/postinst
 #!/bin/sh
@@ -108,3 +140,4 @@ fi
 endef
 
 $(eval $(call BuildPackage,knot-resolver))
+$(eval $(call BuildPackage,knot-resolver-dnstap))
