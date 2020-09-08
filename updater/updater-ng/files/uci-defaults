@@ -5,7 +5,7 @@ set -eu
 # environment variable, if defined, when updater is run in out root mode (the way
 # bootstrap is performed).
 # BOOTSTRAP_UPDATER_BRANCH contains simply target branch for updater.
-bootstrap="/etc/updater/bootstrap-updater-branch"
+bootstrap="/usr/share/updater/bootstrap-updater-branch"
 
 if [ -f "$bootstrap" ]; then
 	uci -q batch <<-EOF
