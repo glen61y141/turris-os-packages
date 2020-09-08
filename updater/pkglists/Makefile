@@ -44,7 +44,6 @@ if [ -n "$$IPKG_INSTROOT" ] &&  [ -n "$$BOOTSTRAP_PKGLISTS" ]; then
 	echo "$$BOOTSTRAP_PKGLISTS" \
 		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-pkglists"
 fi
-}
 endef
 
 $(eval $(call BuildPackage,pkglists))
