@@ -7,7 +7,7 @@ set -eu
 # BOOTSTRAP_PKGLISTS contains comma separated list of package lists. Every package
 # list can also have additional options in parentheses. Options should be split by
 # pipe character. Example of such format would be 'foo(opt1|opt2),fee'.
-bootstrap="/etc/updater/bootstrap-pkgfiles"
+bootstrap="/usr/share/updater/bootstrap-pkgfiles"
 
 if [ -f "$bootstrap" ]; then
 	while IFS="," read -r pkglist; do
