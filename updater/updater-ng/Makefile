@@ -78,7 +78,7 @@ define Package/updater-ng/conffiles
 endef
 
 define Package/updater-ng/postinst
-if [ -n "$$IPKG_INSTROOT" ] &&  [ -n "$$BOOTSTRAP_UPDATER_BRANCH" ]; then
+if [ -n "$$IPKG_INSTROOT" ] && [ -n "$$BOOTSTRAP_UPDATER_BRANCH" ]; then
 	mkdir -p "$$IPKG_INSTROOT/usr/share/updater"
 	echo "$$BOOTSTRAP_UPDATER_BRANCH" \
 		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-updater-branch"
