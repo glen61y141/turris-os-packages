@@ -2,10 +2,10 @@
 set -eu
 
 # bootstrap file is created to store content of BOOTSTRAP_PKGLISTS environment
-# variable, if defined, when updater is run in out of root mode (the way bootstrap
+# variable, if defined and when updater is run in out of root mode (the way bootstrap
 # is performed).
 # BOOTSTRAP_PKGLISTS contains comma separated list of package lists. Every package
-# list can also have additional options in brackets. Options should be split by
+# list can also have additional options in parentheses. Options should be split by
 # pipe character. Example of such format would be 'foo(opt1|opt2),fee'.
 bootstrap="/etc/updater/bootstrap-pkgfiles"
 
@@ -25,6 +25,6 @@ if [ -f "$bootstrap" ]; then
 			done
 			uci commit "pkglists.$name"
 		fi
-	done <"$bootstrap"
+	done < "$bootstrap"
 	rm -f "$bootstrap"
 fi
