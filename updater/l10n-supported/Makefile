@@ -31,7 +31,7 @@ define Package/l10n-supported/install
 endef
 
 define Package/l10n-supported/postinst
-if [ -n "$$IPKG_INSTROOT" ] &&  [ -n "$$BOOTSTRAP_L10N" ]; then
+if [ -n "$$IPKG_INSTROOT" ] && [ -n "$$BOOTSTRAP_L10N" ]; then
 	mkdir -p "$$IPKG_INSTROOT/usr/share/updater"
 	echo "$$BOOTSTRAP_L10N" \
 		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-l10n"

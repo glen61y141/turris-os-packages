@@ -22,7 +22,7 @@ if [ -f "$bootstrap" ]; then
 			del_list updater.l10n.langs='$lang'
 			add_list updater.l10n.langs='$lang'
 		EOF
-	done <"$bootstrap"
+	done < "$bootstrap"
 	rm -f "$bootstrap"
 fi
 
