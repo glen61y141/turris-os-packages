@@ -5,7 +5,7 @@ set -eu
 # variable, if defined, when updater is run in out of root mode (the way bootstrap
 # is performed).
 # BOOTSTRAP_L10N contains comma separated list of languages to be enabled in root.
-bootstrap="/etc/updater/bootstrap-l10n"
+bootstrap="/usr/share/updater/bootstrap-l10n"
 
 # Always create l10n section no matter if bootstrap file exists or not this
 # section should exist.
